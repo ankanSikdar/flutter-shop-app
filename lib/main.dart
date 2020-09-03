@@ -9,6 +9,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.orange,
+        fontFamily: 'Rajdhani',
+        textTheme: TextTheme(
+          headline6: TextStyle(
+            fontFamily: 'Rajdhani',
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.orange,
+        ),
+      ),
       home: ProductOverviewScreen(),
     );
   }
