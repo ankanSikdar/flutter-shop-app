@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/product.dart';
+import 'package:shop_app/providers/products.dart';
 
 class CartItem extends StatelessWidget {
   final String productId;
@@ -36,20 +38,9 @@ class CartItem extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(10),
           child: ListTile(
-            leading: Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border:
-                    Border.all(color: Theme.of(context).primaryColor, width: 2),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Text(
-                '₹ $price',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                Provider.of<Products>(context).findById(productId).imageUrl,
               ),
             ),
             title: Text(
