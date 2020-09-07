@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/widgets/products_grid.dart';
 
 enum FilterOptions { Favorites, All }
@@ -40,7 +42,10 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 }
               });
             },
-          )
+          ),
+          Consumer<Cart>(builder: (context, cart, child) {
+            return Text(cart.itemCount.toString());
+          })
         ],
       ),
       body: ProductsGrid(
