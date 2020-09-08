@@ -18,10 +18,10 @@ class ProductsGrid extends StatelessWidget {
 
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        childAspectRatio: 1 / 1,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
+        crossAxisCount: 2,
+        childAspectRatio: 2 / 3,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
       ),
       itemBuilder: (context, index) {
         return ChangeNotifierProvider.value(
