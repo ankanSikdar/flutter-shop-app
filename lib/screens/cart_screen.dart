@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart' show Cart;
+import 'package:shop_app/providers/orders.dart' show Orders;
+import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
@@ -11,6 +13,8 @@ class CartScreen extends StatelessWidget {
     final cart = Provider.of<Cart>(context);
     final cartItems = cart.items.values.toList();
     final productIds = cart.items.keys.toList();
+
+    final orders = Provider.of<Orders>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +53,13 @@ class CartScreen extends StatelessWidget {
                       color: Colors.green,
                       size: 40,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      orders.addOrder(
+                          cartProducts: cart.items.values.toList(),
+                          total: cart.totalPrice);
+                      cart.clearCart();
+                      Navigator.pushNamed(context, OrdersScreen.routeName);
+                    },
                   )
                 ],
               ),
