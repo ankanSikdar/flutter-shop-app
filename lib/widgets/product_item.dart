@@ -41,21 +41,8 @@ class ProductItem extends StatelessWidget {
             width: 80,
             child: Text(
               product.title,
-              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6,
             ),
-          ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.add_shopping_cart,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            onPressed: () {
-              cart.addItem(
-                  productId: product.id,
-                  title: product.title,
-                  price: product.price);
-            },
           ),
         ),
       ),
