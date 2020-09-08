@@ -38,8 +38,9 @@ class MyApp extends StatelessWidget {
             color: Colors.orange,
           ),
         ),
-        home: ProductOverviewScreen(),
+        initialRoute: ProductOverviewScreen.routeName,
         routes: {
+          ProductOverviewScreen.routeName: (context) => ProductOverviewScreen(),
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           OrdersScreen.routeName: (context) => OrdersScreen(),
