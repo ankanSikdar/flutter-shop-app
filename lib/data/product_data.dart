@@ -67,7 +67,7 @@ List<Product> data = [
   ),
   Product(
     id: 'p9',
-    title: 'AMERICAN CREW Men\'s Polo AC160 Grey',
+    title: 'AMERICAN CREW Polo',
     description:
         'Regular Fit Half Sleeve Polo is made of comfortable, Bio Washed cotton-poly pique fabric, a three-button placket, and ribbed cuffs for a classic look. Fabric Composition - Cotton 60% Poly 40% Blend, Bio Wash Pique Fabric. Pattern - Color Block Men’s Polo Tshirt, Rib Collar & Sleeve for Amazing Fit. Classic "American Crew" Signature Polo with Embroidery on Chest. “Made In India” by Socially Compliant MSME Factory. All Components Used to make this T-Shirt are Proudly "Made in India".',
     price: 599.99,
@@ -76,7 +76,7 @@ List<Product> data = [
   ),
   Product(
     id: 'p10',
-    title: 'Womanista Women\'s Georgette with Blouse Piece',
+    title: 'Georgette with Blouse Piece',
     description:
         'Black party wear poly georgette saree has floral prints on it. This latest fancy designer piece comes with unstitched solid blouse and embellished mirror work lace. Grab this piece for a smart party look.',
     price: 1299.99,
@@ -85,7 +85,7 @@ List<Product> data = [
   ),
   Product(
     id: 'p11',
-    title: 'ANNI DESIGNER Women\'s Crepe Printed Salwer Suit',
+    title: 'Crepe Printed Salwer Suit',
     description:
         'A salwar suit is a combination of tunic or Kameez and a pair of trousers or salwar, usually accompanied by a scarf or Dupatta. Salwar suits are available in a wide range of designs and are more tight-fitting and modern in design when compared to the traditional kameez.',
     price: 1599.99,
