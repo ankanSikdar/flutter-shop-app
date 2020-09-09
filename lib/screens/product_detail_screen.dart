@@ -4,6 +4,7 @@ import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/badge.dart';
+import 'package:shop_app/widgets/buy_floating_action_button.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   static const routeName = '/product-detail-screen';
@@ -85,15 +86,11 @@ class ProductDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          cart.addItem(
-            productId: productId,
-            title: item.title,
-            price: item.price,
-          );
-        },
-        child: Icon(Icons.add_shopping_cart),
+      floatingActionButton: BuyFloatingActionButton(
+        cart: cart,
+        productId: productId,
+        title: item.title,
+        price: item.price,
       ),
     );
   }
