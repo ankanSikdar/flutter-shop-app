@@ -72,6 +72,7 @@ class Cart with ChangeNotifier {
     } else {
       _items.remove(productId);
     }
+    notifyListeners();
   }
 
   void clearCart() {
