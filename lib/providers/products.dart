@@ -2,14 +2,36 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shop_app/providers/product.dart';
-import 'package:shop_app/data/product_data.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = data;
+  List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
+  }
+
+  Future<void> fetchProducts() async {
+    String url = 'https://flutter-shop-app-69896.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      Map data = json.decode(response.body);
+      List<Product> downloadedProducts = [];
+      data.forEach((prodId, prodData) {
+        downloadedProducts.add(Product(
+          id: prodId,
+          title: prodData['title'],
+          description: prodData['description'],
+          price: prodData['price'],
+          imageUrl: prodData['imageUrl'],
+        ));
+      });
+      _items = downloadedProducts;
+      notifyListeners();
+    } catch (error) {
+      print(error.toString());
+      throw error;
+    }
   }
 
   List<Product> get favoriteItems {
