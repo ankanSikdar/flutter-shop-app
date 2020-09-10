@@ -28,7 +28,10 @@ class BuyFloatingActionButton extends StatelessWidget {
               }),
         ));
       },
-      child: Icon(Icons.add_shopping_cart),
+      child: Icon(
+        Icons.add_shopping_cart,
+        color: Colors.white,
+      ),
     );
   }
 }
