@@ -23,7 +23,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     price: 0.0,
     imageUrl: '',
   );
-  Map<String, String> _initialValues = {
+  Map<String, dynamic> _initialValues = {
     'title': '',
     'price': '',
     'description': '',

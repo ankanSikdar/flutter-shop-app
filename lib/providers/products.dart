@@ -28,7 +28,7 @@ class Products with ChangeNotifier {
           body: json.encode({
             'title': product.title,
             'description': product.description,
-            'price': product.price.toString(),
+            'price': product.price,
             'imageUrl': product.imageUrl,
           }));
       Product newProduct = Product(
