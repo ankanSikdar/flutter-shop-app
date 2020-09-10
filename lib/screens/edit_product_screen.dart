@@ -77,7 +77,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _onSubmitForm() {
+  void _onSubmitForm() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -93,10 +93,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       Navigator.pop(context);
     } else {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_product)
-          .catchError((error) {
-        return showDialog<Null>(
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_product);
+      } catch (error) {
+        await showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text(
@@ -116,12 +117,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      }).then((_) {
+      } finally {
         setState(() {
           _isLoading = false;
         });
         Navigator.pop(context);
-      });
+      }
     }
   }
 
