@@ -32,7 +32,6 @@ class Products with ChangeNotifier {
               'imageUrl': product.imageUrl,
             }))
         .then((value) {
-      print(json.decode(value.body)['name']);
       Product newProduct = Product(
         id: json.decode(value.body)['name'],
         title: product.title,
@@ -40,9 +39,11 @@ class Products with ChangeNotifier {
         price: product.price,
         imageUrl: product.imageUrl,
       );
-
       _items.insert(0, newProduct);
       notifyListeners();
+    }).catchError((error) {
+      print(error.toString());
+      throw error;
     });
   }
 
