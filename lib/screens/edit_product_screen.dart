@@ -221,7 +221,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             return 'Please Enter a Description';
                           } else if (value.length < 10) {
                             return 'Description should be greater than 10 characters';
-                          } else if (value.length > 200) {
+                          } else if (value.length > 500) {
                             return 'Description cannot be greater than 200 characters';
                           }
                           return null;
