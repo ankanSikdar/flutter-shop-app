@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/widgets/error_dialog.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -91,6 +92,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
             .updateProduct(_product.id, _product);
       } catch (error) {
         print(error.toString());
+        await showDialog(
+          context: context,
+          builder: (context) => ErrorAlertDialog(
+            error: error.toString(),
+          ),
+        );
       }
     } else {
       try {
@@ -99,22 +106,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       } catch (error) {
         await showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              'An ERROR Occured!',
-              style: Theme.of(context).textTheme.headline6.copyWith(
-                    color: Colors.black,
-                  ),
-            ),
-            content: Text(error.toString()),
-            actions: [
-              FlatButton(
-                child: Text('Okay'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
+          builder: (context) => ErrorAlertDialog(
+            error: error.toString(),
           ),
         );
       }
