@@ -35,16 +35,32 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (_imageUrlFocusNode.hasFocus) {
+      String value = _imageUrlController.text;
+      if (value.isEmpty ||
+          !value.startsWith('http') ||
+          !value.startsWith('https')) {
+        return;
+      }
       setState(() {});
     }
   }
 
   void _onSubmitForm() {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     _formKey.currentState.save();
     print(_product.title);
     print(_product.description);
     print(_product.price);
     print(_product.imageUrl);
+    _clearForm();
+  }
+
+  void _clearForm() {
+    _formKey.currentState.reset();
+    _imageUrlController.clear();
+    setState(() {});
   }
 
   @override
@@ -74,6 +90,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       imageUrl: _product.imageUrl,
                     );
                   },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please Enter a Title';
+                    } else if (value.length < 3) {
+                      return 'Title should be more than 3 characters';
+                    } else if (value.length > 25) {
+                      return 'Title cannot be greater than 25 characters';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Price'),
@@ -92,6 +118,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       imageUrl: _product.imageUrl,
                     );
                   },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please Enter a Price';
+                    } else if (double.tryParse(value) == null) {
+                      return 'Plase Enter a Valid Number';
+                    } else if (double.parse(value) <= 0) {
+                      return 'Price cannot be less than or equal to 0';
+                    } else if (double.parse(value) > 99999.99) {
+                      return 'Price should be less than ₹1 Lakhs';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Description'),
@@ -106,6 +144,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       price: _product.price,
                       imageUrl: _product.imageUrl,
                     );
+                  },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please Enter a Description';
+                    } else if (value.length < 10) {
+                      return 'Description should be greater than 10 characters';
+                    } else if (value.length > 100) {
+                      return 'Description cannot be greater than 100 characters';
+                    }
+                    return null;
                   },
                 ),
                 Row(
@@ -149,6 +197,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             price: _product.price,
                             imageUrl: value,
                           );
+                        },
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Image Url cannot be Empty';
+                          } else if (!value.startsWith('http') ||
+                              !value.startsWith('https')) {
+                            return 'Please Enter a valid URL';
+                          }
+                          return null;
                         },
                         onFieldSubmitted: (_) {
                           _onSubmitForm();
