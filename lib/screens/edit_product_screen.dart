@@ -16,13 +16,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Product _product =
-      Product(id: null, title: '', description: '', price: 0.0, imageUrl: '');
+  Product _product = Product(
+    id: null,
+    title: '',
+    description: '',
+    price: 0.0,
+    imageUrl: '',
+  );
+  Map<String, String> _initialValues = {
+    'title': '',
+    'price': '',
+    'description': '',
+  };
+
+  bool _isInit = true;
 
   @override
   void initState() {
     super.initState();
     _imageUrlController.addListener(_updateImageUrl);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Runs before build
+    if (_isInit) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      if (productId != null) {
+        _product = Provider.of<Products>(context).findById(productId);
+        _initialValues['title'] = _product.title;
+        _initialValues['price'] = _product.price.toString();
+        _initialValues['description'] = _product.description;
+        _imageUrlController.text = _product.imageUrl;
+      }
+    }
+    _isInit = false;
   }
 
   @override
@@ -52,7 +81,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formKey.currentState.save();
-    Provider.of<Products>(context, listen: false).addProduct(_product);
+    if (_product.id != null) {
+      Provider.of<Products>(context, listen: false)
+          .updateProduct(_product.id, _product);
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_product);
+    }
     Navigator.pop(context);
   }
 
@@ -74,6 +108,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_priceFocusNode);
                   },
+                  initialValue: _initialValues['title'],
                   onSaved: (value) {
                     _product = Product(
                       id: _product.id,
@@ -102,6 +137,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_descriptionFocusNode);
                   },
+                  initialValue: _initialValues['price'],
                   onSaved: (value) {
                     _product = Product(
                       id: _product.id,
@@ -129,6 +165,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   maxLines: 3,
                   focusNode: _descriptionFocusNode,
                   keyboardType: TextInputType.multiline,
+                  initialValue: _initialValues['description'],
                   onSaved: (value) {
                     _product = Product(
                       id: _product.id,
@@ -143,8 +180,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       return 'Please Enter a Description';
                     } else if (value.length < 10) {
                       return 'Description should be greater than 10 characters';
-                    } else if (value.length > 100) {
-                      return 'Description cannot be greater than 100 characters';
+                    } else if (value.length > 200) {
+                      return 'Description cannot be greater than 200 characters';
                     }
                     return null;
                   },

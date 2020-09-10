@@ -28,4 +28,17 @@ class Products with ChangeNotifier {
     _items.insert(0, newProduct);
     notifyListeners();
   }
+
+  void updateProduct(String id, Product product) {
+    final productIndex = _items.indexWhere((element) => element.id == id);
+    _items[productIndex] = Product(
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      imageUrl: product.imageUrl,
+      isFavorite: _items[productIndex].isFavorite,
+    );
+    notifyListeners();
+  }
 }
