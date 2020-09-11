@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/http_exception.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:http/http.dart' as http;
 
@@ -91,8 +92,21 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeProduct(String id) {
-    _items.removeWhere((element) => element.id == id);
+  Future<void> removeProduct(String id) async {
+    int productIndex = _items.indexWhere((element) => element.id == id);
+    Product deletedProduct = _items[productIndex];
+    _items.removeAt(productIndex);
     notifyListeners();
+
+    String url =
+        'https://flutter-shop-app-69896.firebaseio.com/products/$id.json';
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(productIndex, deletedProduct);
+      notifyListeners();
+      throw HTTPException(
+          'ERROR ${response.statusCode}: Coudn\'t delete product!');
+    }
+    deletedProduct = null;
   }
 }

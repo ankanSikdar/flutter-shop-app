@@ -12,6 +12,7 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(
@@ -54,10 +55,17 @@ class UserProductItem extends StatelessWidget {
                       actions: [
                         FlatButton(
                           child: Text('Yes'),
-                          onPressed: () {
-                            Provider.of<Products>(context, listen: false)
-                                .removeProduct(id);
+                          onPressed: () async {
                             Navigator.pop(context);
+                            try {
+                              await Provider.of<Products>(context,
+                                      listen: false)
+                                  .removeProduct(id);
+                            } catch (error) {
+                              scaffold.showSnackBar(SnackBar(
+                                content: Text(error.toString()),
+                              ));
+                            }
                           },
                         ),
                         FlatButton(
