@@ -25,6 +25,7 @@ class Products with ChangeNotifier {
           description: prodData['description'],
           price: prodData['price'],
           imageUrl: prodData['imageUrl'],
+          isFavorite: prodData['isFavorite'],
         ));
       });
       _items = downloadedProducts;
@@ -53,6 +54,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'price': product.price,
             'imageUrl': product.imageUrl,
+            'isFavorite': false,
           }));
       Product newProduct = Product(
         id: json.decode(response.body)['name'],
