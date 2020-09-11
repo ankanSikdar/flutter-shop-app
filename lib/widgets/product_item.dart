@@ -6,6 +6,7 @@ import 'package:shop_app/screens/product_detail_screen.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     final product = Provider.of<Product>(context);
 
     return ClipRRect(
@@ -31,8 +32,14 @@ class ProductItem extends StatelessWidget {
               product.isFavorite ? Icons.favorite : Icons.favorite_border,
               color: Theme.of(context).iconTheme.color,
             ),
-            onPressed: () {
-              product.toggleFavorite();
+            onPressed: () async {
+              try {
+                await product.toggleFavorite();
+              } catch (error) {
+                scaffold.showSnackBar(SnackBar(
+                  content: Text(error.toString()),
+                ));
+              }
             },
           ),
           title: Container(
