@@ -46,7 +46,10 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  OrderButton(orders: orders, cart: cart)
+                  OrderButton(
+                    orders: orders,
+                    cart: cart,
+                  )
                 ],
               ),
             ),
@@ -90,7 +93,12 @@ class _OrderButtonState extends State<OrderButton> {
   @override
   Widget build(BuildContext context) {
     return _isOrdering
-        ? CircularProgressIndicator()
+        ? Container(
+            height: 25,
+            width: 25,
+            margin: EdgeInsets.only(left: 10),
+            child: CircularProgressIndicator(),
+          )
         : IconButton(
             color: Colors.green,
             disabledColor: Colors.grey,
@@ -113,10 +121,13 @@ class _OrderButtonState extends State<OrderButton> {
                         _isOrdering = false;
                       });
                     } catch (error) {
-                      print(error);
                       setState(() {
                         _isOrdering = false;
                       });
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            'ERROR: Unable to place order! Try again later!'),
+                      ));
                     }
                   },
           );
