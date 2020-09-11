@@ -46,19 +46,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                      size: 40,
-                    ),
-                    onPressed: () {
-                      orders.addOrder(
-                          cartProducts: cart.items.values.toList(),
-                          total: cart.totalPrice);
-                      cart.clearCart();
-                    },
-                  )
+                  OrderButton(orders: orders, cart: cart)
                 ],
               ),
             ),
@@ -79,5 +67,58 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.orders,
+    @required this.cart,
+  }) : super(key: key);
+
+  final Orders orders;
+  final Cart cart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  bool _isOrdering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return _isOrdering
+        ? CircularProgressIndicator()
+        : IconButton(
+            color: Colors.green,
+            disabledColor: Colors.grey,
+            icon: Icon(
+              Icons.check_circle,
+              size: 40,
+            ),
+            onPressed: widget.cart.itemCount <= 0
+                ? null
+                : () async {
+                    setState(() {
+                      _isOrdering = true;
+                    });
+                    try {
+                      await widget.orders.addOrder(
+                          cartProducts: widget.cart.items.values.toList(),
+                          total: widget.cart.totalPrice);
+                      widget.cart.clearCart();
+                      setState(() {
+                        _isOrdering = false;
+                      });
+                    } catch (error) {
+                      print(error);
+                      setState(() {
+                        _isOrdering = false;
+                      });
+                    }
+                  },
+          );
   }
 }

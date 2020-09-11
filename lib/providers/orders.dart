@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:shop_app/models/http_exception.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:http/http.dart' as http;
 
 class OrderItem {
   final String id;
@@ -22,15 +26,39 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder({List<CartItem> cartProducts, double total}) {
-    _orders.insert(
+  Future<void> addOrder({List<CartItem> cartProducts, double total}) async {
+    String url = 'https://flutter-shop-app-69896.firebaseio.com/orders.json';
+
+    DateTime time = DateTime.now();
+
+    try {
+      var response = await http.post(url,
+          body: json.encode({
+            'amount': total,
+            'products': cartProducts
+                .map((cp) => {
+                      'id': cp.id,
+                      'title': cp.title,
+                      'price': cp.price,
+                      'quantity': cp.quantity,
+                    })
+                .toList(),
+            'dateTime': time.toIso8601String(),
+          }));
+      final OrderItem orderItem = OrderItem(
+        id: json.decode(response.body)['name'],
+        amount: total,
+        products: cartProducts,
+        dateTime: time,
+      );
+      _orders.insert(
         0,
-        OrderItem(
-          id: DateTime.now().toString(),
-          amount: total,
-          products: cartProducts,
-          dateTime: DateTime.now(),
-        ));
-    notifyListeners();
+        orderItem,
+      );
+      notifyListeners();
+    } catch (error) {
+      print(error.toString());
+      throw HTTPException(error.toString());
+    }
   }
 }
