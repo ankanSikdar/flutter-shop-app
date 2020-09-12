@@ -21,9 +21,18 @@ class _OrderItemState extends State<OrderItem> {
     return Column(
       children: [
         ListTile(
-          title: Text('₹ ${widget.orderItem.amount.toStringAsFixed(2)}'),
-          subtitle:
-              Text(DateFormat.yMd().add_jm().format(widget.orderItem.dateTime)),
+          title: Text(
+            '₹ ${widget.orderItem.amount.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          subtitle: Text(
+            DateFormat.yMd().add_jm().format(widget.orderItem.dateTime),
+            style: TextStyle(
+              fontSize: 15,
+            ),
+          ),
           trailing: IconButton(
             icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
             onPressed: () {
@@ -35,10 +44,12 @@ class _OrderItemState extends State<OrderItem> {
         ),
         if (_expanded)
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
+            margin: EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
             height: min(widget.orderItem.products.length * 20.0 + 10, 100.0),
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              // padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               itemBuilder: (context, index) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,14 +57,13 @@ class _OrderItemState extends State<OrderItem> {
                     Text(
                       '${widget.orderItem.products[index].title}',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
                       ),
                     ),
                     Text(
                       '${widget.orderItem.products[index].quantity}X ₹${widget.orderItem.products[index].price}',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 15,
                         color: Colors.grey,
                       ),
                     ),
