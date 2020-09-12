@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/models/http_exception.dart';
+import 'package:shop_app/providers/auth.dart';
+import 'package:shop_app/widgets/error_dialog.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -61,7 +65,16 @@ class _AuthCardState extends State<AuthCard> {
     });
   }
 
-  void _submit() {
+  void _showErrorDialog(String error) {
+    showDialog(
+      context: context,
+      builder: (context) => ErrorAlertDialog(
+        error: error,
+      ),
+    );
+  }
+
+  void _submit() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -69,10 +82,31 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+
+    try {
+      if (_authMode == AuthMode.Login) {
+        await Provider.of<Auth>(context, listen: false)
+            .login(email: _authData['email'], password: _authData['password']);
+      } else {
+        await Provider.of<Auth>(context, listen: false)
+            .singUp(email: _authData['email'], password: _authData['password']);
+      }
+    } on HTTPException catch (error) {
+      var errorMessage = 'An Error Occured! Please try again later!';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email is already in use!';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Please enter a valid email address!';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Please enter a strong password!';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Coudn\'t find a user with the given email!';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid password!';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      _showErrorDialog(error.toString());
     }
     setState(() {
       _isLoading = false;
