@@ -26,8 +26,8 @@ class Products with ChangeNotifier {
       final response = await http.get(url);
       Map data = json.decode(response.body);
       if (data == null || data['error'] != null) {
-        print(data['error']);
-        return;
+        throw HTTPException(
+            data == null ? 'Something went wrong!' : data['error']);
       }
       url =
           'https://flutter-shop-app-69896.firebaseio.com/userFavorites/$userId.json?auth=$auth';

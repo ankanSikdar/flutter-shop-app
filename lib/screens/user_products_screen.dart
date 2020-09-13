@@ -3,20 +3,30 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
+import 'package:shop_app/widgets/error_dialog.dart';
 import 'package:shop_app/widgets/user_product_item.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
 
   Future<void> _refreshPage(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false)
-        .fetchProducts(fetchByUserId: true);
+    try {
+      await Provider.of<Products>(context, listen: false)
+          .fetchProducts(fetchByUserId: true);
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorAlertDialog(
+            error: error.toString(),
+          );
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final productsData = Provider.of<Products>(context);
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Your Products'),
@@ -33,6 +43,11 @@ class UserProductsScreen extends StatelessWidget {
         body: FutureBuilder(
           future: _refreshPage(context),
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('ERROR: ${snapshot.error.toString()}'),
+              );
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),

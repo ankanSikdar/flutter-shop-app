@@ -5,6 +5,7 @@ import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
 import 'package:shop_app/widgets/badge.dart';
+import 'package:shop_app/widgets/error_dialog.dart';
 import 'package:shop_app/widgets/products_grid.dart';
 
 enum FilterOptions { Favorites, All }
@@ -30,6 +31,18 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       });
       final products = Provider.of<Products>(context);
       products.fetchProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorAlertDialog(
+              error: error.toString(),
+            );
+          },
+        );
         setState(() {
           _isLoading = false;
         });
