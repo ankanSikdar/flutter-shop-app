@@ -5,7 +5,6 @@ import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
 import 'package:shop_app/widgets/badge.dart';
-import 'package:shop_app/widgets/error_dialog.dart';
 import 'package:shop_app/widgets/products_grid.dart';
 
 enum FilterOptions { Favorites, All }
@@ -19,38 +18,6 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _showOnlyFavorites = false;
-  bool _isInit = true;
-  bool _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      final products = Provider.of<Products>(context);
-      products.fetchProducts().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      }).catchError((error) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return ErrorAlertDialog(
-              error: error.toString(),
-            );
-          },
-        );
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,25 +53,43 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               ];
             },
             onSelected: (selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.Favorites) {
-                  _showOnlyFavorites = true;
-                } else if (selectedValue == FilterOptions.All) {
-                  _showOnlyFavorites = false;
+              if (selectedValue == FilterOptions.Favorites) {
+                if (_showOnlyFavorites == false) {
+                  setState(() {
+                    _showOnlyFavorites = true;
+                  });
                 }
-              });
+              } else if (selectedValue == FilterOptions.All) {
+                if (_showOnlyFavorites == true) {
+                  setState(() {
+                    _showOnlyFavorites = false;
+                  });
+                }
+              }
             },
           ),
         ],
       ),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
+      body: FutureBuilder(
+        future: Provider.of<Products>(context, listen: false).fetchProducts(),
+        builder: (context, snapshot) {
+          print(snapshot.data);
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Something went wrong!'),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
               child: CircularProgressIndicator(),
-            )
-          : ProductsGrid(
+            );
+          } else {
+            return ProductsGrid(
               onlyFavorites: _showOnlyFavorites,
-            ),
+            );
+          }
+        },
+      ),
     );
   }
 }
