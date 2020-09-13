@@ -16,13 +16,17 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchProducts() async {
-    String url =
-        'https://flutter-shop-app-69896.firebaseio.com/products.json?auth=$auth';
+  Future<void> fetchProducts({fetchByUserId = false}) async {
+    final filterString =
+        fetchByUserId ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url =
+        'https://flutter-shop-app-69896.firebaseio.com/products.json?auth=$auth&$filterString';
+
     try {
       final response = await http.get(url);
       Map data = json.decode(response.body);
-      if (data == null) {
+      if (data == null || data['error'] != null) {
+        print(data['error']);
         return;
       }
       url =
@@ -69,7 +73,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'price': product.price,
             'imageUrl': product.imageUrl,
-            'isFavorite': false,
+            'creatorId': userId,
           }));
       Product newProduct = Product(
         id: json.decode(response.body)['name'],
