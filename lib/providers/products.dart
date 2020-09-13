@@ -6,14 +6,18 @@ import 'package:shop_app/providers/product.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  List<Product> _items = [];
+  final String auth;
+  List<Product> _items;
+
+  Products([this.auth, this._items = const []]);
 
   List<Product> get items {
     return [..._items];
   }
 
   Future<void> fetchProducts() async {
-    String url = 'https://flutter-shop-app-69896.firebaseio.com/products.json';
+    String url =
+        'https://flutter-shop-app-69896.firebaseio.com/products.json?auth=$auth';
     try {
       final response = await http.get(url);
       Map data = json.decode(response.body);
@@ -48,7 +52,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    String url = 'https://flutter-shop-app-69896.firebaseio.com/products.json';
+    String url =
+        'https://flutter-shop-app-69896.firebaseio.com/products.json?auth=$auth';
 
     try {
       final response = await http.post(url,
@@ -77,7 +82,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product product) async {
     final productIndex = _items.indexWhere((element) => element.id == id);
     String url =
-        'https://flutter-shop-app-69896.firebaseio.com/products/$id.json';
+        'https://flutter-shop-app-69896.firebaseio.com/products/$id.json?auth=$auth';
     await http.patch(url,
         body: json.encode({
           'title': product.title,
@@ -104,7 +109,7 @@ class Products with ChangeNotifier {
     notifyListeners();
 
     String url =
-        'https://flutter-shop-app-69896.firebaseio.com/products/$id.json';
+        'https://flutter-shop-app-69896.firebaseio.com/products/$id.json?auth=$auth';
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
       _items.insert(productIndex, deletedProduct);
