@@ -42,10 +42,12 @@ class MyApp extends StatelessWidget {
             },
             update: (context, auth, previousOrdersState) {
               return Orders(
-                  auth.token,
-                  previousOrdersState.orders == null
-                      ? []
-                      : previousOrdersState.orders);
+                auth.token,
+                previousOrdersState.orders == null
+                    ? []
+                    : previousOrdersState.orders,
+                auth.userId,
+              );
             },
           ),
         ],
