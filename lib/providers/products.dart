@@ -8,8 +8,9 @@ import 'package:http/http.dart' as http;
 class Products with ChangeNotifier {
   final String auth;
   List<Product> _items;
+  final String userId;
 
-  Products([this.auth, this._items = const []]);
+  Products([this.auth, this.userId, this._items = const []]);
 
   List<Product> get items {
     return [..._items];
@@ -24,6 +25,11 @@ class Products with ChangeNotifier {
       if (data == null) {
         return;
       }
+      url =
+          'https://flutter-shop-app-69896.firebaseio.com/userFavorites/$userId.json?auth=$auth';
+      final favorites = await http.get(url);
+      Map favoritesData = json.decode(favorites.body);
+
       List<Product> downloadedProducts = [];
       data.forEach((prodId, prodData) {
         downloadedProducts.add(Product(
@@ -32,7 +38,8 @@ class Products with ChangeNotifier {
           description: prodData['description'],
           price: prodData['price'],
           imageUrl: prodData['imageUrl'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite:
+              favoritesData == null ? false : favoritesData[prodId] ?? false,
         ));
       });
       _items = downloadedProducts;
