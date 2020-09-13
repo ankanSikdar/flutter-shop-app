@@ -11,7 +11,7 @@ class Auth extends ChangeNotifier {
   String _userId;
 
   bool get isAuth {
-    return token != null;
+    return _token != null;
   }
 
   String get token {
@@ -44,13 +44,12 @@ class Auth extends ChangeNotifier {
         int code = responseData['error']['code'];
         String message = responseData['error']['message'];
         throw HTTPException('ERROR $code: $message');
-      } else {
-        _token = responseData['idToken'];
-        _expiryDate = DateTime.now().add(Duration(
-            seconds: int.parse(json.decode(response.body)['expiresIn'])));
-        _userId = responseData['localId'];
-        print(_expiryDate);
       }
+      _token = responseData['idToken'];
+      _expiryDate = DateTime.now().add(Duration(
+          seconds: int.parse(json.decode(response.body)['expiresIn'])));
+      _userId = responseData['localId'];
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -66,5 +65,12 @@ class Auth extends ChangeNotifier {
     const urlString = 'signInWithPassword';
     return _authenticate(
         email: email, password: password, urlString: urlString);
+  }
+
+  void logOut() {
+    _token = null;
+    _expiryDate = null;
+    _userId = null;
+    notifyListeners();
   }
 }

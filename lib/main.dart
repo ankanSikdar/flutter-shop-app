@@ -69,9 +69,7 @@ class MyApp extends StatelessWidget {
                 color: Colors.orange,
               ),
             ),
-            initialRoute: auth.isAuth
-                ? ProductDetailScreen.routeName
-                : AuthScreen.routeName,
+            home: auth.isAuth ? ProductDetailScreen() : AuthScreen(),
             routes: {
               AuthScreen.routeName: (context) => AuthScreen(),
               ProductOverviewScreen.routeName: (context) =>
