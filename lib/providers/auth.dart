@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -9,18 +10,15 @@ class Auth extends ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
+  Timer _authTimer;
+  String _refreshToken;
 
   bool get isAuth {
     return _token != null;
   }
 
   String get token {
-    if (_expiryDate != null &&
-        _expiryDate.isAfter(DateTime.now()) &&
-        _token != null) {
-      return _token;
-    }
-    return null;
+    return _token;
   }
 
   String get userId {
@@ -49,6 +47,8 @@ class Auth extends ChangeNotifier {
       _expiryDate = DateTime.now().add(Duration(
           seconds: int.parse(json.decode(response.body)['expiresIn'])));
       _userId = responseData['localId'];
+      _refreshToken = responseData['refreshToken'];
+      _autoRefreshIdsTimer();
       notifyListeners();
     } catch (error) {
       throw error;
@@ -71,6 +71,42 @@ class Auth extends ChangeNotifier {
     _token = null;
     _expiryDate = null;
     _userId = null;
+    _authTimer = null;
+    _refreshToken = null;
     notifyListeners();
+  }
+
+  Future<void> refreshIds() async {
+    String url = 'https://securetoken.googleapis.com/v1/token?key=$apiKey';
+    try {
+      var response = await http.post(url,
+          body: json.encode({
+            'grant_type': 'refresh_token',
+            'refresh_token': _refreshToken,
+          }));
+      var responseData = json.decode(response.body);
+      if (responseData['error'] == null) {
+        _token = responseData['id_token'];
+        _expiryDate = DateTime.now().add(Duration(
+            seconds: int.parse(json.decode(response.body)['expires_in'])));
+        _userId = responseData['user_id'];
+        _refreshToken = responseData['refresh_token'];
+        _autoRefreshIdsTimer();
+        notifyListeners();
+      } else {
+        logOut();
+      }
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  void _autoRefreshIdsTimer() {
+    if (_authTimer != null) {
+      _authTimer.cancel();
+    }
+    Duration timeToExpiry = _expiryDate.difference(DateTime.now());
+    _authTimer =
+        Timer(Duration(seconds: timeToExpiry.inSeconds - 60), refreshIds);
   }
 }

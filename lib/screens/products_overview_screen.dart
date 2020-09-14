@@ -74,7 +74,6 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       body: FutureBuilder(
         future: Provider.of<Products>(context, listen: false).fetchProducts(),
         builder: (context, snapshot) {
-          print(snapshot.data);
           if (snapshot.hasError) {
             return Center(
               child: Text('Something went wrong!'),
