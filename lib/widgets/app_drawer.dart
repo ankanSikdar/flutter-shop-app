@@ -13,7 +13,7 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: Text('Hello Ankan!'),
+            title: Text('Shop App'),
           ),
           SizedBox(
             height: 20,
