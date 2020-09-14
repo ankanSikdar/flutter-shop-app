@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/models/http_exception.dart';
 
 const String apiKey = 'AIzaSyB2yHMXlMpRTfj8T3SG3IiZh4-WDqbxLzc';
@@ -50,6 +51,15 @@ class Auth extends ChangeNotifier {
       _refreshToken = responseData['refreshToken'];
       _autoRefreshIdsTimer();
       notifyListeners();
+
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      Map<String, dynamic> userData = {
+        'token': _token,
+        'expiryDate': _expiryDate.toIso8601String(),
+        'userId': _userId,
+        'refreshToken': _refreshToken,
+      };
+      preferences.setString('userData', json.encode(userData));
     } catch (error) {
       throw error;
     }
@@ -67,13 +77,35 @@ class Auth extends ChangeNotifier {
         email: email, password: password, urlString: urlString);
   }
 
-  void logOut() {
+  Future<bool> isAutoLogin() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    Map<String, dynamic> userData =
+        json.decode(preferences.getString('userData'));
+    if (userData == null) {
+      return false;
+    }
+    if (DateTime.now().isAfter(DateTime.parse(userData['expiryDate']))) {
+      return false;
+    }
+    _token = userData['token'];
+    _expiryDate = DateTime.parse(userData['expiryDate']);
+    _userId = userData['userId'];
+    _refreshToken = userData['refreshToken'];
+    _autoRefreshIdsTimer();
+    notifyListeners();
+    return true;
+  }
+
+  void logOut() async {
     _token = null;
     _expiryDate = null;
     _userId = null;
     _authTimer = null;
     _refreshToken = null;
     notifyListeners();
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
   }
 
   Future<void> refreshIds() async {
