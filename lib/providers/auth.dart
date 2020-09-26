@@ -4,8 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/models/http_exception.dart';
-
-const String apiKey = 'AIzaSyB2yHMXlMpRTfj8T3SG3IiZh4-WDqbxLzc';
+import 'keys.dart';
 
 class Auth extends ChangeNotifier {
   String _token;
