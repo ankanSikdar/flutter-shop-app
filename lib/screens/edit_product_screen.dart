@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/widgets/error_dialog.dart';
+import 'package:regexed_validator/regexed_validator.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -69,9 +70,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void _updateImageUrl() {
     if (_imageUrlFocusNode.hasFocus) {
       String value = _imageUrlController.text;
-      if (value.isEmpty ||
-          !value.startsWith('http') ||
-          !value.startsWith('https')) {
+      if (value.isEmpty || validator.url(value) != true) {
         return;
       }
       setState(() {});

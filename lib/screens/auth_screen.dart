@@ -4,6 +4,7 @@ import 'package:shop_app/models/http_exception.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
 import 'package:shop_app/widgets/error_dialog.dart';
+import 'package:regexed_validator/regexed_validator.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -160,7 +161,7 @@ class _AuthCardState extends State<AuthCard> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please Enter Your Email!';
-                  } else if (!value.contains('@') || value.length < 6) {
+                  } else if (validator.email(value) != true) {
                     return 'Please Enter a valid mail';
                   }
                   return null;
