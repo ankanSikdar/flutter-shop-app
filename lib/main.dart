@@ -12,6 +12,7 @@ import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
 import 'package:shop_app/screens/splash_screen.dart';
 import 'package:shop_app/screens/user_products_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -60,10 +61,10 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.purple,
               accentColor: Colors.orange,
-              fontFamily: 'Rajdhani',
+              fontFamily: GoogleFonts.cabin().fontFamily,
               textTheme: TextTheme(
                 headline6: TextStyle(
-                  fontFamily: 'Rajdhani',
+                  fontFamily: GoogleFonts.cabin().fontFamily,
                   fontSize: 18,
                   color: Colors.white,
                 ),

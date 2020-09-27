@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/products.dart';
@@ -55,7 +56,7 @@ class ProductDetailScreen extends StatelessWidget {
               '${item.title}',
               style: TextStyle(
                 fontSize: 30,
-                fontFamily: 'Teko',
+                fontFamily: GoogleFonts.rubik().fontFamily,
               ),
               textAlign: TextAlign.center,
             ),

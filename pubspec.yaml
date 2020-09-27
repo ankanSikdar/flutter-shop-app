@@ -31,6 +31,7 @@ dependencies:
   intl: ^0.16.1
   http: ^0.12.2
   shared_preferences: ^0.5.10
+  google_fonts: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -62,15 +63,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Rajdhani
-      fonts:
-        - asset: assets/fonts/Rajdhani-Regular.ttf
-        - asset: assets/fonts/Rajdhani-Bold.ttf
-          weight: 700
-    - family: Teko
-      fonts:
-        - asset: assets/fonts/Teko-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
