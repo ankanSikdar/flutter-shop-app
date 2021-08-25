@@ -1,4 +1,4 @@
-package com.ankansikdar.shop_app
+package dev.ankan.shop_app
 
 import io.flutter.embedding.android.FlutterActivity
 
