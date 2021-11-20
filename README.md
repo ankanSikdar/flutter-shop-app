@@ -1,6 +1,20 @@
-# shop_app
+# Shop App
 
-A new Flutter project.
+An E-Commerce app made with flutter. You can post listings, buy, add to cart, add to favorites,
+
+## Details
+
+• [Provider](https://pub.dev/packages/provider) for state management
+
+• [Firebase Auth](https://firebase.google.com/docs/auth) for user authentication
+
+• [Firebase Realtime Database](https://firebase.google.com/docs/database) as the database
+
+• [Shared Preferences](https://pub.dev/packages/shared_preferences) to store user data in device
+
+## Screenshots
+
+<img src="screenshots/ss1.jpg" width = 250> <img src="screenshots/ss2.jpg" width = 250> <img src="screenshots/ss3.jpg" width = 250> <img src="screenshots/ss4.jpg" width = 250> <img src="screenshots/ss5.jpg" width = 250>
 
 ## Getting Started
 
